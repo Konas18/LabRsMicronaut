@@ -18,21 +18,18 @@ public class MyController {
         return userService.getList();
     }
 
-    @Get(value = "/user/find", consumes = MediaType.APPLICATION_JSON)
-    public GetUserByIdRsDto getById(@Body Integer id){
-        GetUserByIdRqDto getUserByIdRqDto = new GetUserByIdRqDto();
-        getUserByIdRqDto.setId(id);
-        System.out.println(getUserByIdRqDto.getId() + "[eq");
+    @Post(value = "/user/find", consumes = MediaType.APPLICATION_JSON)
+    public GetUserByIdRsDto getById(@Body GetUserByIdRqDto getUserByIdRqDto){
         return userService.getById(getUserByIdRqDto.getId());
     }
 
     @Post(value = "/user/login", consumes = MediaType.APPLICATION_JSON)
-    public LoginRsDto Verification(@RequestAttribute LoginRqDto loginRqDto){
+    public LoginRsDto Verification(@Body LoginRqDto loginRqDto){
         return userService.Verification(loginRqDto);
     }
 
     @Post(value = "/user/registration", consumes = MediaType.APPLICATION_JSON)
-    public RegistrationRsDto Registration(@RequestAttribute RegistrationRqDto registrationRqDto){
+    public RegistrationRsDto Registration(@Body RegistrationRqDto registrationRqDto){
         return userService.Registration(registrationRqDto);
     }
 }
