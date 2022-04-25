@@ -19,8 +19,10 @@ public class MyController {
     }
 
     @Get(value = "/user/find", consumes = MediaType.APPLICATION_JSON)
-    public GetUserByIdRsDto getById(@RequestAttribute GetUserByIdRqDto getUserByIdRqDto){
-        System.out.println(getUserByIdRqDto.getId());
+    public GetUserByIdRsDto getById(@Body Integer id){
+        GetUserByIdRqDto getUserByIdRqDto = new GetUserByIdRqDto();
+        getUserByIdRqDto.setId(id);
+        System.out.println(getUserByIdRqDto.getId() + "[eq");
         return userService.getById(getUserByIdRqDto.getId());
     }
 
