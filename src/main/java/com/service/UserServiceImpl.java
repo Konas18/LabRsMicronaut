@@ -1,54 +1,69 @@
 package com.service;
 
+import com.Entity.Friend;
+import com.Entity.User;
 import com.dto.*;
+import com.repository.FriendsRepository;
 import com.repository.UserRepository;
-import io.micronaut.context.annotation.Bean;
-import io.micronaut.context.annotation.Factory;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.netty.DefaultHttpClient;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.apache.http.client.methods.HttpGet;
 
 
-import java.util.List;
-import java.util.Locale;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 @Singleton
 public class UserServiceImpl implements UserService {
 
     @Inject
     UserRepository userRepository;
+    FriendsRepository friendsRepository;
 
     @Inject
     public void main() {
         userRepository.getUserList().add(new User(1,"Заболотский Александр Николаевич", 19, "Zab1@mail.ru", "zab1", "123"));
         userRepository.getUserList().add(new User(2,"Заболотская Светлана Егоровна", 45, "Zab2@mail.ru", "zab2", "123"));
         userRepository.getUserList().add(new User(3,"Заболотский Николай Иванович", 50, "Zab3@mail.ru", "zab3", "123"));
+    }
 
-//        userRepository.getUserList()
-//                .add(User.builder()
-//                        .id(1)
-//                        .name("Заболотский Александр Николаевич")
-//                        .age(19)
-//                        .email("Zab1@mail.ru")
-//                        .login("zab1")
-//                        .password("123")
-//                    .build());
-//        userRepository.getUserList()
-//                .add(User.builder()
-//                        .id(2)
-//                        .name("Заболотская Светлана Егоровна")
-//                        .age(50)
-//                        .email("Zab2@mail.ru")
-//                        .login("zab2")
-//                        .password("123")
-//                        .build());userRepository.getUserList()
-//                .add(User.builder()
-//                        .id(3)
-//                        .name("Заболотский Николай Иванович")
-//                        .age(55)
-//                        .email("Zab3@mail.ru")
-//                        .login("zab3")
-//                        .password("123")
-//                        .build());
+    @Override
+    public String getFriends() throws IOException {
+
+        HttpGet token = new HttpGet("https://oauth.vk.com/authorize?client_id=8164338&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.131&state=123456");
+
+        String acessToken = "e8e6090aa9c9b10aa6d79c55ec21c8caff0de10b144c688d836693e0dbd7d82f694910ee1980f7bf88093";
+
+        String url = "https://api.vk.com/method/friends.get?v=5.131&count=5&access_token="+acessToken+"&&fields=name";
+
+        URL obj = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+        connection.setRequestMethod("GET");
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //friendsRepository.getUserList().set(1, new Friend(response , response , response))
+
+        return response.toString();
     }
 
     @Override
@@ -68,10 +83,14 @@ public class UserServiceImpl implements UserService {
     public List<User> getList() {
         return userRepository.getUserList();
     }
-
     @Override
     public LoginRsDto Verification(LoginRqDto loginRqDto) {
+
+        Map<String, Object> tokenData = new HashMap<>();
+
         boolean ver = false;
+        String token = "";
+        String key = "abc123";
         String rqLogin = loginRqDto.getLogin();
         String rqPassword = loginRqDto.getPassword();
 
@@ -83,6 +102,21 @@ public class UserServiceImpl implements UserService {
             if (rqLogin.equals(userLogin)){
                 if (rqPassword.equals(userPassword) ){
                     ver = true;
+
+                    tokenData.put("clientType", "user");
+                    tokenData.put("userID", ur.getId());
+                    tokenData.put("username", ur.getName());
+                    tokenData.put("token_create_date", new Date().getTime());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.YEAR, 100);
+                    tokenData.put("token_expiration_date", calendar.getTime());
+                    JwtBuilder jwtBuilder = Jwts.builder();
+                    jwtBuilder.setExpiration(calendar.getTime());
+                    jwtBuilder.setClaims(tokenData);
+                    token = jwtBuilder.signWith(SignatureAlgorithm.HS512, key).compact();
+                    //return token;
+                    System.out.println(key);
+                    System.out.println(token);
                 }
             }
         }

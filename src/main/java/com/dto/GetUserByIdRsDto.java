@@ -1,5 +1,7 @@
 package com.dto;
 
+import com.Entity.User;
+
 public class GetUserByIdRsDto {
     private User user;
 

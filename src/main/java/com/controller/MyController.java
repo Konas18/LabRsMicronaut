@@ -1,13 +1,16 @@
 package com.controller;
 
+import com.Entity.User;
 import com.dto.*;
 import com.service.UserService;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
+import java.io.IOException;
 import java.util.List;
-
 @Controller
 public class MyController {
     @Inject
@@ -26,6 +29,11 @@ public class MyController {
     @Post(value = "/user/login", consumes = MediaType.APPLICATION_JSON)
     public LoginRsDto Verification(@Body LoginRqDto loginRqDto){
         return userService.Verification(loginRqDto);
+    }
+
+    @Get( "/user/friends")
+    public String getFriends() throws IOException {
+        return userService.getFriends();
     }
 
     @Post(value = "/user/registration", consumes = MediaType.APPLICATION_JSON)

@@ -1,11 +1,9 @@
 package com.repository;
 
-import com.dto.User;
-import io.micronaut.context.annotation.Bean;
+import com.Entity.User;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
