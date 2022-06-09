@@ -1,20 +1,24 @@
 package com.controller;
 
 import com.Entity.User;
+import com.autentification.AuthenticationService;
+import com.autentification.AuthenticationServicempl;
 import com.dto.*;
 import com.service.UserService;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
+import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.util.List;
+@PermitAll
 @Controller
 public class MyController {
     @Inject
     UserService userService;
+    @Inject
+    AuthenticationService authenticationService;
 
     @Get( "/user/list")
     public List<User> getUserList(){
@@ -28,7 +32,7 @@ public class MyController {
 
     @Post(value = "/user/login", consumes = MediaType.APPLICATION_JSON)
     public LoginRsDto Verification(@Body LoginRqDto loginRqDto){
-        return userService.Verification(loginRqDto);
+        return authenticationService.Verification(loginRqDto);
     }
 
     @Get( "/user/friends")

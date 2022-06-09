@@ -1,16 +1,11 @@
 package com.service;
 
-import com.Entity.Friend;
 import com.Entity.User;
 import com.dto.*;
-import com.repository.FriendsRepository;
 import com.repository.UserRepository;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.client.netty.DefaultHttpClient;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.http.client.methods.HttpGet;
@@ -20,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -29,7 +23,6 @@ public class UserServiceImpl implements UserService {
 
     @Inject
     UserRepository userRepository;
-    FriendsRepository friendsRepository;
 
     @Inject
     public void main() {
@@ -61,7 +54,6 @@ public class UserServiceImpl implements UserService {
         }
         in.close();
 
-        //friendsRepository.getUserList().set(1, new Friend(response , response , response))
 
         return response.toString();
     }
