@@ -6,10 +6,11 @@ micronaut:
         signatures:
           secret:
             generator:
-              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
+              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:abc123}"'
         generator:
           access-token:
             expiration: 300
+    default-access: isAuthenticated()
   application:
     name: labrsmicronaut
   server:

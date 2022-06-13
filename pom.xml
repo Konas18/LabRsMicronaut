@@ -51,6 +51,11 @@
             <version>0.9.1</version>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
+        </dependency>
+        <dependency>
             <groupId>io.micronaut.security</groupId>
             <artifactId>micronaut-security-jwt</artifactId>
             <scope>compile</scope>

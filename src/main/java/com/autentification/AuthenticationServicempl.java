@@ -2,9 +2,13 @@ package com.autentification;
 
 
 import com.Entity.User;
+import com.Entity.UsersToken;
 import com.dto.LoginRqDto;
 import com.dto.LoginRsDto;
+import com.dto.RegistrationRqDto;
+import com.dto.RegistrationRsDto;
 import com.repository.UserRepository;
+import com.repository.UsersTokenRepository;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,18 +18,16 @@ import jakarta.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 @Singleton
 public class AuthenticationServicempl implements AuthenticationService {
     @Inject
     UserRepository userRepository;
     @Inject
-    public void main() {
-        userRepository.getUserList().add(new User(1,"Заболотский Александр Николаевич", 19, "Zab1@mail.ru", "zab1", "123"));
-        userRepository.getUserList().add(new User(2,"Заболотская Светлана Егоровна", 45, "Zab2@mail.ru", "zab2", "123"));
-        userRepository.getUserList().add(new User(3,"Заболотский Николай Иванович", 50, "Zab3@mail.ru", "zab3", "123"));
-    }
+    UsersTokenRepository usersTokenRepository;
 
     @Override
     public LoginRsDto Verification(LoginRqDto loginRqDto) {
@@ -58,13 +60,20 @@ public class AuthenticationServicempl implements AuthenticationService {
                     jwtBuilder.setClaims(tokenData);
                     String key = "abc123";
                     token = jwtBuilder.signWith(SignatureAlgorithm.HS512, key).compact();
+                    usersTokenRepository.getUsersTokenList().add(new UsersToken(rqLogin,"Bearer "+token));
                 }
             }
         }
         LoginRsDto loginRsDto = new LoginRsDto();
         loginRsDto.setVerification(ver);
         loginRsDto.setToken(token);
+
         return loginRsDto;
+    }
+
+    @Override
+    public RegistrationRsDto Registration(RegistrationRqDto registrationRqDto) {
+        return null;
     }
 
     public boolean passwordMath(Integer id, String password) {

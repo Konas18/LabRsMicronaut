@@ -11,11 +11,16 @@ import jakarta.inject.Singleton;
 import org.apache.http.client.methods.HttpGet;
 
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Singleton
@@ -135,7 +140,8 @@ public class UserServiceImpl implements UserService {
         }
         RegistrationRsDto registrationRsDto = new RegistrationRsDto();
         registrationRsDto.setVerification(ver);
-        return registrationRsDto;
         //return RegistrationRsDto.builder().verification(ver).build();
+
+        return registrationRsDto;
     }
 }
