@@ -10,5 +10,6 @@ public interface AuthenticationService {
 
     RegistrationRsDto Registration(RegistrationRqDto registrationRqDto);
 
-    //String Decode(String token);
+    String DecodeTokenDate(String token);
+
 }

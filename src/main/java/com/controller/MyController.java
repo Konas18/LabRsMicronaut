@@ -19,6 +19,7 @@ import jakarta.inject.Inject;
 import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +40,8 @@ public class MyController {
     public List<User> getUserList(@Header(AUTHORIZATION)String token){
         for (UsersToken ut : usersTokenRepository.getUsersTokenList()) {
             String userToken = ut.getUserToken();
-            if (userToken.equals(token)) {
+            Long l = Long.parseLong(authenticationService.DecodeTokenDate(token));
+            if (userToken.equals(token) || l > new Date().getTime()) {
                 return userService.getList();
             }
         }
@@ -50,7 +52,8 @@ public class MyController {
     public GetUserByIdRsDto getById(@Header(AUTHORIZATION)String token, @Body GetUserByIdRqDto getUserByIdRqDto) throws SQLException {
         for (UsersToken ut : usersTokenRepository.getUsersTokenList()) {
             String userToken = ut.getUserToken();
-            if (userToken.equals(token)) {
+            Long l = Long.parseLong(authenticationService.DecodeTokenDate(token));
+            if (userToken.equals(token) || l > new Date().getTime()) {
                 return userService.getById(getUserByIdRqDto.getId());
             }
         }
@@ -61,7 +64,8 @@ public class MyController {
     public String getFriends(@Header(AUTHORIZATION)String token) throws IOException {
         for (UsersToken ut : usersTokenRepository.getUsersTokenList()) {
             String userToken = ut.getUserToken();
-            if (userToken.equals(token)) {
+            Long l = Long.parseLong(authenticationService.DecodeTokenDate(token));
+            if (userToken.equals(token) || l > new Date().getTime()) {
                 return userService.getFriends();
             }
         }

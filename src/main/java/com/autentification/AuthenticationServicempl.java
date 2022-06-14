@@ -116,6 +116,16 @@ public class AuthenticationServicempl implements AuthenticationService {
         return registrationRsDto;
     }
 
+    @Override
+    public String DecodeTokenDate(String token) {
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        String payload = new String(decoder.decode(chunks[1]));
+        String[] payloadData = payload.split(",");
+        String[] date = payloadData[1].split(":");
+        return date[1];
+    }
 
     public boolean passwordMath(Integer id, String password) {
         Optional<User> candidate = Optional.ofNullable(userRepository.getUserList().get(id));
