@@ -9,4 +9,6 @@ public interface AuthenticationService {
     LoginRsDto Verification(LoginRqDto loginRqDto);
 
     RegistrationRsDto Registration(RegistrationRqDto registrationRqDto);
+
+    //String Decode(String token);
 }

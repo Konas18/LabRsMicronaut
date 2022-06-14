@@ -13,6 +13,4 @@ public interface UserService {
     String getFriends() throws IOException;
 
     GetUserByIdRsDto getById(int id);
-    LoginRsDto Verification(LoginRqDto loginRqDto);
-    RegistrationRsDto Registration(RegistrationRqDto registrationRqDto);
 }

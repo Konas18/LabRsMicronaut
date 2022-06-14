@@ -1,4 +1,5 @@
 micronaut:
+
   security:
     authentication: bearer
     token:
@@ -14,6 +15,16 @@ micronaut:
   application:
     name: labrsmicronaut
   server:
+    port: 8080
+    cors:
+      enabled: true
+      web:
+        allowedOrigins:
+          http://localhost:4200/
+        allowedMethods:
+          - POST
+          - PUT
+          - GET
     netty:
       access-logger:
         enabled: true

@@ -31,9 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Inject
     public void main() {
-        userRepository.getUserList().add(new User(1,"Заболотский Александр Николаевич", 19, "Zab1@mail.ru", "zab1", "123"));
-        userRepository.getUserList().add(new User(2,"Заболотская Светлана Егоровна", 45, "Zab2@mail.ru", "zab2", "123"));
-        userRepository.getUserList().add(new User(3,"Заболотский Николай Иванович", 50, "Zab3@mail.ru", "zab3", "123"));
+        userRepository.getUserList().add(new User(1,"Заболотский", "Александр", "Николаевич", 19, "Zab1@mail.ru", "zab1", "123"));
+        userRepository.getUserList().add(new User(2,"Заболотская", "Светлана", "Егоровна", 45, "Zab2@mail.ru", "zab2", "123"));
+        userRepository.getUserList().add(new User(3,"Заболотский", "Николай", "Иванович", 50, "Zab3@mail.ru", "zab3", "123"));
     }
 
     @Override
@@ -79,69 +79,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getList() {
         return userRepository.getUserList();
-    }
-    @Override
-    public LoginRsDto Verification(LoginRqDto loginRqDto) {
-
-        Map<String, Object> tokenData = new HashMap<>();
-
-        boolean ver = false;
-        String token = "";
-        String key = "abc123";
-        String rqLogin = loginRqDto.getLogin();
-        String rqPassword = loginRqDto.getPassword();
-
-        for (User ur : userRepository.getUserList())
-        {
-            String userLogin =  ur.getLogin();
-            String userPassword =  ur.getPassword();
-
-            if (rqLogin.equals(userLogin)){
-                if (rqPassword.equals(userPassword) ){
-                    ver = true;
-
-                    tokenData.put("clientType", "user");
-                    tokenData.put("userID", ur.getId());
-                    tokenData.put("username", ur.getName());
-                    tokenData.put("token_create_date", new Date().getTime());
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.YEAR, 100);
-                    tokenData.put("token_expiration_date", calendar.getTime());
-                    JwtBuilder jwtBuilder = Jwts.builder();
-                    jwtBuilder.setExpiration(calendar.getTime());
-                    jwtBuilder.setClaims(tokenData);
-                    token = jwtBuilder.signWith(SignatureAlgorithm.HS512, key).compact();
-                    //return token;
-                    System.out.println(key);
-                    System.out.println(token);
-                }
-            }
-        }
-        LoginRsDto loginRsDto = new LoginRsDto();
-        loginRsDto.setVerification(ver);
-        return loginRsDto;
-        //return LoginRsDto.builder().verification(ver).build();
-    }
-
-    @Override
-    public RegistrationRsDto Registration(RegistrationRqDto registrationRqDto) {
-        boolean ver = true;
-        String rqLogin = registrationRqDto.getLogin().toLowerCase(Locale.ROOT);
-        String rqEmail = registrationRqDto.getEmail().toLowerCase(Locale.ROOT);
-
-        for (User ur : userRepository.getUserList())
-        {
-            String userLogin =  ur.getLogin().toLowerCase(Locale.ROOT);
-            String userEmail =  ur.getEmail().toLowerCase(Locale.ROOT);
-
-            if (rqLogin.equals(userLogin) || rqEmail.equals(userEmail)) {
-                ver = false;
-            }
-        }
-        RegistrationRsDto registrationRsDto = new RegistrationRsDto();
-        registrationRsDto.setVerification(ver);
-        //return RegistrationRsDto.builder().verification(ver).build();
-
-        return registrationRsDto;
     }
 }
